@@ -1,52 +1,61 @@
 import random
 
-for i in range(3):
+VALID_MOVES = {"R": "Rock", "P": "Paper", "S": "Scissors"}
 
 
-    def play_game(greeting="Hello, "):
-        print(greeting + "Please select rock, paper, or scissors")
-        player_move = input().lower()
-        print("Your move was " + player_move)
-        moves = ["rock", "paper", "scissors"]
-        computer_move = random.choice(moves)
-        print("Computer move is " + computer_move)
+def get_player_move():
+    while True:
+        move = input("Choose [R]ock, [P]aper, or [S]cissors: ").upper()
+        if move in VALID_MOVES:
+            return move
+        print("Invalid choice. Please enter R, P, or S.")
 
-        winner = "computer"
 
-        if player_move == computer_move:
-            winner = "tie"
-        elif player_move == "rock":
-            if computer_move == "paper":
-                winner = "computer"
-            elif computer_move == "scissors":
-                winner = "player"
-        elif player_move == "scissors" and computer_move == "paper":
-            winner = "player"
-        elif player_move == "paper" and computer_move == "rock":
-            winner = "player"
-        elif player_move == "scissors" and computer_move == "rock":
-            winner = "computer"
-        elif player_move == "paper" and computer_move == "scissors":
-            winner = "computer"
+def get_computer_move():
+    return random.choice(list(VALID_MOVES.keys()))
+
+
+def determine_winner(player_move, computer_move):
+    if player_move == computer_move:
+        return "tie"
+    wins = {
+        "R": "S",  # Rock beats Scissors
+        "P": "R",  # Paper beats Rock
+        "S": "P",  # Scissors beats Paper
+    }
+    return "player" if wins[player_move] == computer_move else "computer"
+
+
+def play_game():
+    print("Welcome to Rock, Paper, Scissors! 🪨📃✂️")
+    player_score = 0
+    computer_score = 0
+
+    while True:
+        player_move = get_player_move()
+        computer_move = get_computer_move()
+
+        print(f"You chose {VALID_MOVES[player_move]}")
+        print(f"Computer chose {VALID_MOVES[computer_move]}")
+
+        result = determine_winner(player_move, computer_move)
+
+        if result == "tie":
+            print("It's a tie!")
+        elif result == "player":
+            print("You win this round!")
+            player_score += 1
         else:
-            print("Your move '" + player_move + "' was invalid")
-            return
-    
-        if winner == "computer":
-            input("I win, you lose. Hahahah! Shall we play again? ")
-        elif winner == "tie":
-            print("It's a tie...")
-        else:
-            input("Congratulations, you win. Can I get a rematch? ")
-            if player_move == "yes":
-                play_game()
-            if player_move == "no": 
-                print("Well, good game then.")
+            print("Computer wins this round!")
+            computer_score += 1
 
+        print(f"Score | You: {player_score} | Computer: {computer_score} |")
+
+        again = input("Play again? (y/n): ").lower()
+        if again != "y":
+            print("Thanks for playing!")
+            break
+
+
+if __name__ == "__main__":
     play_game()
-
-
-
-
-
-# (Parameter)
